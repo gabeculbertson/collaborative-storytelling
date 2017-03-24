@@ -79,6 +79,8 @@
 			$("#new-game").click(function(){
 				window.open('/newsession', '_self');
 			});
+
+			socket.emit("score", { user: user, score: 0 });
 		});
 	</script>
 
