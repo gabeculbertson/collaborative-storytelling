@@ -1,0 +1,124 @@
+<html>
+<head>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+	<script type="text/javascript" src="/js/get-url-parameter.js"></script>
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+	<script type="text/javascript">
+		var socket = io('/');
+		var user = "unknown";
+
+		var colors = [
+			"lightblue",
+			"yellow",
+			"lightgreen",
+			"#E6B0AA",
+			"#D7BDE2"
+		];
+
+		socket.on("text-message", function(text){
+			$("#text-history").append("<br>" + text);
+		});
+
+		socket.on("scores", function(scores){
+			var text = "[Scores] ";
+			for(var key in scores){
+				text += key + ": " + scores[key] + "&nbsp;&nbsp;&nbsp;&nbsp;";
+			}
+			$("#score-container").html(text);
+		});
+
+		function addCards(msg){
+			console.log(msg);
+			for(var i in msg){
+				$("#card-container").append('<div class="col-md-3 card" score=' + msg[i].score + ' text = \"' + msg[i].text + '\"><div style="width:100%">' + msg[i].text + "<br><br>" + msg[i].score + ' points</div></div>');
+				var ele = $(".card[text=\"" + msg[i].text + "\"]");
+				ele.hide();
+				ele.fadeIn("slow");
+				ele.css('background-color', colors[parseInt(msg[i].score) - 1]);
+			}
+			$(".card").off('click');
+			$(".card").click(function(){
+				var text = $(this).attr("text");
+				var score = $(this).attr("score");
+				console.log(text, score);
+				socket.emit("text-message", user + " plays the card: " + text);
+				$(this).remove();
+
+				$.get('/cards?count=' + 1, function(msg){
+					addCards(msg);
+				});
+
+				socket.emit("score", { user: user, score: score });
+			});
+			// $(".card").fadeIn("slow");
+		}
+
+		$(document).ready(function(){
+			user = getUrlParameter("user");
+
+			$('#submit-text').click(function(){
+				var text = $("#text-input").val();
+				$("#text-input").val("");
+				socket.emit('text-message', user + ": " + text);
+			});
+
+			$(document).keypress(function(e){
+				if(e.keyCode == 13){
+					$('#submit-text').click();
+				}
+			});
+
+			$.get('/cards?count=' + 6, function(msg){
+				addCards(msg);
+			});
+
+			$("#new-game").click(function(){
+				window.open('/newsession', '_self');
+			});
+		});
+	</script>
+
+	<style type="text/css">
+		html, body { height: 100%; }
+		#text-history {
+			padding: 16px;
+		}
+
+		.card {
+			border-radius: 16px;
+			padding: 16px;
+			background-color: lightblue;
+			border: 2px solid gray;
+			height: 200px;
+			text-align: center;
+			display: flex; 
+			align-items: center;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+        <br><br>
+        <div class="col-md-6">
+			<div style="height: 100%">
+				<div id="text-history" style="height: 60%; border: 1px solid black">
+				</div>
+				<div style="display: block; vertical-align: middle;">
+					<textarea id="text-input" type="text" name="" style="width: 100%" rows=5></textarea>
+					<button id="submit-text" style="float: right">send</button>
+				</div>
+				<br><br><br><br>
+				<button id="new-game" style="float: right">start new game</button>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div id="score-container" class="col-md-12" style="font-size: large"></div>
+			<div id="card-container" class="col-md-12"></div>
+		</div>
+	</div>
+</body>
+</html>

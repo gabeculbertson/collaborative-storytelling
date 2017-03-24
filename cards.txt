@@ -1,0 +1,34 @@
+Create a tension in the story;5
+Create a conflict in the story;5
+Talk about the atmosphere;4
+Talk about someone's personality;4
+Talk about the culture;4
+Reveal a secret;4
+Create a conversation (2-4 turns);4
+Make a twist of the story using however/although/nevertheless, in terms of…;4
+Create a condition using if/as long as;4
+Create a causal effect relation using due to…, as a result;4
+At the expense of...;3
+Include a complex sentence;3
+'On the contrary';3
+'Be puzzled by';3
+Keep...from;3
+Include a question;3
+'adventurous';2
+'sorcery';2
+'optimistic';2
+'inhabitants';2
+'decorated with';2
+'propose';2
+'assume';2
+'unexplored';2
+'desert island';2
+'problem';1
+'chemist';1
+'beast';1
+'sail';1
+'discover';1 
+'unusual';1
+'poisonous';1 
+'funny';1
+'giant footprints';1
