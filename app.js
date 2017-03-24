@@ -5,9 +5,11 @@ var fs = require('fs');
 var bodyParser = require('body-parser');
 var cards = require('./libs/cards');
 
-var port = fs.readFileSync('port.txt', 'utf8');
-port = port || 80;
-port = parseInt(port);
+var port = 80;
+if(fs.existsSync('port.txt')){
+    port = fs.readFileSync('port.txt', 'utf8');
+    port = parseInt(port);
+}
 
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json());
@@ -24,9 +26,9 @@ app.get('/cards', function(req, res){
 });
 
 var httpServer = http.createServer(app);
-httpServer.listen(80);
+httpServer.listen(port);
 
-console.log('server started');
+console.log('server started on ' + port);
 
 var io = require('socket.io')(httpServer);
 
