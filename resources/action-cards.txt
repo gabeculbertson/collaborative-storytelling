@@ -1,0 +1,5 @@
+Player can use two language cards in one turn	Double
+Player can use three language cards in one turn	Tripple
+Player can give up any one of their language/action card, and draw one from the deck.	Renew
+Player can give up any one of their language/action card, and draw one from any of the player.	Swap
+Player can change the word/phrase into other word/phrase with the same initial.	Magic Ink

@@ -1,0 +1,33 @@
+create a tension/conflict in the story	5	3
+add something evil to the story	5	1
+add something romantic to the story	5	1
+talk about the climate	4	1
+culture	4	1
+reveal a secret (smth unknown yet)	4	1
+create a conversation (2-4 turns)	4	1
+however/although/nevertheless	4	1
+in terms of…	4	1
+as	4	1
+at the expense of	3	1
+on the contrary	3	1
+be puzzled by	3	1
+keep...from	3	1
+include a question	3	1
+adventurous	2	1
+sorcery	2	1
+optimistic	2	1
+inhabitants	2	1
+decorated with	2	1
+propose	2	1
+assume	2	1
+unexplored	2	1
+desert island	2	1
+problem	1	1
+chemist	1	1
+beast	1	1
+sail	1	1
+discover	1	1
+unusual	1	1
+poisonous	1	1
+funny	1	1
+giant footprints	1	1

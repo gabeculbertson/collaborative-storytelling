@@ -9,14 +9,10 @@
 
 	<script type="text/javascript">
 		$(document).ready(function(){
-			$("#submit-text").click(function(){
-				window.open('/?user=' + $('#text-input').val(), '_self');
-			});
-
-			$(document).keypress(function(e){
-				if(e.keyCode == 13){
-					$('#submit-text').click();
-				}
+			$("#newgame-link").click(function(){
+				$.get('api/newgame', function(res){
+					window.open("/game?gameId=" + res, "_self")
+				});
 			});
 		});
 	</script>
@@ -37,6 +33,10 @@
 			display: flex; 
 			align-items: center;
 		}
+
+		a {
+			cursor: pointer;
+		}
 	</style>
 </head>
 <body>
@@ -44,11 +44,14 @@
         <br><br>
         <div class="col-md-12">
 			<div style="height: 100%">
-				<h3>Enter a username:</h3>
-				<div style="display: block; vertical-align: middle;">
-					<input id="text-input" type="text" name="" style="width: 100%">
-					<button id="submit-text" style="float: right">send</button>
+				<h3>Games</h3>
+				<div id="games">
+					<% for(var game in games){ %>
+					<a class="game-link" href="/game?gameId=<%= game %>">Game ID: <%= game %></a> (<a class="game-link" href="/api/endgame?gameId=<%= game %>">end game</a>)
+					<% } %>
 				</div>
+				<br><br>
+				<a id="newgame-link">New game</a>
 			</div>
 		</div>
 	</div>

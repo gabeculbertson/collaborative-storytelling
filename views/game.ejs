@@ -1,0 +1,134 @@
+<html>
+<head>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+	<script type="text/javascript" src="/js/get-url-parameter.js"></script>
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+	<script type="text/javascript">
+		var socket = io('/');
+		var user = "unknown";
+		var game = '<%= gameId %>';
+
+		var colors = [
+			"lightblue",
+			"yellow",
+			"lightgreen",
+			"#E6B0AA",
+			"#D7BDE2"
+		];
+
+		socket.on('joined', function(){
+			socket.emit('text-message', '<span style="color:blue"><b>' + user + "</b> has joined the game." + '</span>');
+		});
+
+		socket.on("text-message", function(text){
+			$("#text-history").append("<br>" + text);
+		});
+
+		socket.on("language-card", function(card){
+			console.log(card);
+			$("#card-container").append("<div class='card col-md-2'><div style='width:100%'>Value: " + card.score + "<br><br>" + card.text + "</div></div>");
+		});
+
+		function initializeGame(){
+			$('#submit-text').click(function(){
+				var text = $("#text-input").val();
+				socket.emit('text-message', user + ": " + text);
+				setTimeout(function(){
+					$("#text-input").val("");
+				}, 10);
+			});
+
+			$("#draw-language-card").click(function(){
+				socket.emit('draw-language-card');
+			});
+
+			$(document).keypress(function(e){
+				if(e.keyCode == 13){
+					$('#submit-text').click();
+				}
+			});
+		}
+
+		$(document).ready(function(){
+			// set up user
+			if(sessionStorage.getItem('username')){
+				$("#enter-user").hide();
+				user = sessionStorage.getItem('username');
+				initializeGame();
+			} else {
+				$("#game-area").hide();
+				$("#submit-user").click(function(){
+					var username = $("#user-input").val();
+					// check if username contains whitespace
+					if(/\s/.test(username)){
+						// remove whitespace from name
+						$("#user-input").val(username.replace(/\s+/g, ""));
+					} else if(username != ""){
+						// set the user and begin
+						user = username;
+						// store information in the tab
+						sessionStorage.setItem('username', user);
+						$("#enter-user").hide();
+						$("#game-area").show();
+						initializeGame();
+					}
+				});
+			}
+
+			socket.emit('set-game', game);
+		});
+	</script>
+
+	<style type="text/css">
+		html, body { height: 100%; }
+		#text-history {
+			padding: 16px;
+		}
+
+		.card {
+			border-radius: 16px;
+			padding: 16px;
+			background-color: lightblue;
+			border: 2px solid gray;
+			height: 200px;
+			text-align: center;
+			display: flex; 
+			align-items: center;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<br><br>
+		<div id="enter-user">
+			<h1>Enter your username</h1>
+			<input id="user-input" type="text" name="" style="width: 100%">
+			<button id="submit-user" style="float: right">send</button>
+		</div>
+        <div id="game-area">
+	        <div class="col-md-4">
+				<div style="height: 100%">
+					<div id="text-history" style="height: 60%; border: 1px solid black">
+					</div>
+					<div style="display: block; vertical-align: middle;">
+						<textarea id="text-input" type="text" name="" style="width: 100%" rows=5></textarea>
+						<button id="submit-text" style="float: right">send</button>
+					</div>
+					<br><br>
+					<div>
+						<button id="draw-language-card">Draw language card</button>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-8">
+				<div id="score-container" class="col-md-12" style="font-size: large"></div>
+				<div id="card-container" class="col-md-12"></div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
